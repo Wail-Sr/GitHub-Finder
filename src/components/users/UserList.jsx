@@ -1,24 +1,16 @@
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import UserCard from './UserCard'
+import GitHubContext from '../../context/github/GitHubContext'
+import { useContext } from 'react'
 
 function UserList() {
 
-    const [users, setUsers] = useState([])
-    const [loading, setLoading] = useState(true)
+    const {users, loading, fetchUsers} = useContext(GitHubContext)
     
     useEffect(() => {
         fetchUsers()
     }, [])
-
-    const fetchUsers = async () => {
-        const response = await fetch(`${process.env.REACT_APP_GITHUB_URL}users`)
-        const data = await response.json()
-
-        setUsers(data)
-        setLoading(false)
-        console.log(data)
-    } 
 
     if (!loading){
         return (
