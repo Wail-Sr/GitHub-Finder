@@ -14,7 +14,7 @@ export const GitHubProvider = ({children}) => {
 
     const [state, dispatch] = useReducer(GithubReducer, initialState)
 
-    // GET OUR USERS? IT'S JUST FOR TEST PURPOSES
+    // GET OUR USERS, IT'S JUST FOR TEST PURPOSES
     const fetchUsers = async () => {
 
         dispatch({
@@ -29,13 +29,43 @@ export const GitHubProvider = ({children}) => {
             type: 'GET_USERS',
             payload: data
         })
-        
     } 
+
+    const searchUsers = async (searchText) => {
+        dispatch({
+            type: 'SET_LOADING',
+            loadingValue: true
+        })
+
+        const params = new URLSearchParams({
+            q: searchText
+        })
+
+        const response = await fetch(`${GitHubURL}search/users?${params}`)
+
+        const {items} = await response.json()
+
+        // we can get data and then playload will be data.items  
+
+        dispatch({
+            type: 'GET_USERS',
+            payload: items
+        })
+    }
+
+    const clearUsers = () => {
+        dispatch({
+            type: 'GET_USERS',
+            payload: []
+        })
+    }
 
     return <GitHubContext.Provider value={{
         users: state.users,
         loading: state.loading,
         fetchUsers,
+        searchUsers,
+        clearUsers,
     }}>
         {children}
     </GitHubContext.Provider>

@@ -1,16 +1,11 @@
 import React from 'react'
-import { useEffect } from 'react'
 import UserCard from './UserCard'
 import GitHubContext from '../../context/github/GitHubContext'
 import { useContext } from 'react'
 
 function UserList() {
 
-    const {users, loading, fetchUsers} = useContext(GitHubContext)
-    
-    useEffect(() => {
-        fetchUsers()
-    }, [])
+    const {users, loading} = useContext(GitHubContext)
 
     if (!loading){
         return (
