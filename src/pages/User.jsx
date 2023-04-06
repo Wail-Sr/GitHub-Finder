@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom'
 import { useEffect, useContext } from 'react'
 import GitHubContext from '../context/github/GitHubContext'
 import { useParams } from 'react-router-dom'
+import RepoList from '../components/repos/RepoList'
 
 function User() {
 
-  const {user, fetchUser, loading} = useContext(GitHubContext)
+  const {user, repos, fetchUser, loading} = useContext(GitHubContext)
 
   const params = useParams()
 
@@ -19,7 +20,7 @@ function User() {
     name, 
     type,
     avatar_url,
-    loaction,
+    location,
     bio,
     blog,
     twitter_username,
@@ -85,11 +86,77 @@ function User() {
                 <a href={html_url} target='_blank' rel='noreferrer' className="py-2 btn btn-outline">Visit GitHub Profile</a>
               </div>
             </div>
+
+            <div className="w-full rounded-lg shadow-md bg-base-100 stats">
+              {location && (
+                <div className="stat">
+                  <div className="stat-title text-md">Location</div>
+                  <div className="text-lg stat-value">{location}</div>
+                </div>
+              )}
+              {blog && (
+                <div className="stat">
+                  <div className="stat-title text-md">Personal Website</div>
+                  <div className="text-lg stat-value">
+                    <a href={`https://${blog}`} target='_blank' rel='referrer'>{blog}</a>
+                  </div>
+                </div>
+              )}
+              {twitter_username && (
+                <div className="stat">
+                  <div className="stat-title text-md">Twitter</div>
+                  <div className="text-lg stat-value">
+                    <a href={`https://twitter.com/${twitter_username}`} target='_blank' rel='referrer'>{twitter_username}</a>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full p-y-5 m-b-6 rounded-lg shadow-md bg-base-100 stats">
+          <div className="stat">
+            <div className="stat-figure text-secondary">
+                <FaUsers className="text-3xl"/>
+            </div>
+            <div className="stat-title pr-5">
+              Followers
+            </div>
+            <div className="stat-value text-2xl">{followers}</div>
           </div>
 
-          <div className='col-sapn-3'></div>
+          <div className="stat">
+            <div className="stat-figure text-secondary">
+              <FaUserFriends className="text-3xl" />
+            </div>
+            <div className="stat-title">
+              Following
+            </div>
+            <div className="stat-value text-2xl">{following}</div>
+          </div>
 
+          <div className="stat">
+            <div className="stat-figure text-secondary">
+              <FaCodepen className="text-3xl" />
+            </div>
+            <div className="stat-title">
+              Public Repos
+            </div>
+            <div className="stat-value text-2xl">{public_repos}</div>
+          </div>
+
+          <div className="stat">
+            <div className="stat-figure text-secondary">
+              <FaStore className="text-3xl" />
+            </div>
+            <div className="stat-title">
+              Public Gists
+            </div>
+            <div className="stat-value text-2xl">{public_gists}</div>
+          </div>
         </div>
+
+        <RepoList repos={repos}/>
       </div>
     </>
   )

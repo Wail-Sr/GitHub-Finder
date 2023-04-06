@@ -19,6 +19,7 @@ const GithubReducer = (state, action) => {
             return {
                 ...state,
                 user: action.payload,
+                repos: action.repos,
                 loading: false,
             }
             

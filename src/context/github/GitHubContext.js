@@ -11,6 +11,7 @@ export const GitHubProvider = ({children}) => {
     const initialState = {
         users: [],
         user: {}, 
+        repos: [],
         loadingUser: false
     }
 
@@ -70,13 +71,16 @@ export const GitHubProvider = ({children}) => {
         })
 
         const response = await fetch(`${GitHubURL}users/${userLogin}`)
-        if (response.status === 404) window.location = '/notfound'
+        const response2 = await fetch(`${GitHubURL}users/${userLogin}/repos`)
+        if (response.status === 404 || response2.status === 404) window.location = '/notfound'
         else {
             const data = await response.json()
+            const data2 = await response2.json()
         
             dispatch({
                 type: 'GET_USER',
-                payload: data
+                payload: data,
+                repos: data2
 
             })
         }
@@ -85,6 +89,7 @@ export const GitHubProvider = ({children}) => {
     return <GitHubContext.Provider value={{
         users: state.users,
         user: state.user,
+        repos: state.repos,
         loading: state.loading,
         fetchUsers,
         searchUsers,
