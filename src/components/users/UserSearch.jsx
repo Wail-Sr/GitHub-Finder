@@ -3,23 +3,27 @@ import { useState, useContext } from 'react'
 import GitHubContext from '../../context/github/GitHubContext'
 import Alert from '../shared/Alert'
 import AlertContext from '../../context/alert/AlertContext'
+import { searchUsers } from '../../context/github/GithubActions'
 
 function UserSearch() {
 
   const [inputText, setInputText] = useState('')
 
-  const { users, searchUsers, clearUsers } = useContext(GitHubContext)
+  const { users, dispatch } = useContext(GitHubContext)
   const {alert, setAlert} = useContext(AlertContext)
 
   const handleInputChange = (e) => {
     setInputText(e.target.value)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (inputText.length > 0) {
-      searchUsers(inputText)
+      dispatch({type: 'SET_LOADING', loadingValue: true})
+      const users = await searchUsers(inputText)
+      dispatch({type: 'GET_USERS', payload: users})
+
       setInputText('')
     } else {
       setAlert('Search Field is empty!', 'Please Enter a user name and try submitting again.')
@@ -44,7 +48,7 @@ function UserSearch() {
 
         {users.length > 0 && (
           <div>
-            <button className='btn btn-ghost btn-mg' onClick={clearUsers}>Clear</button>
+            <button className='btn btn-ghost btn-mg' onClick={() => dispatch({type: 'GET_USERS', payload: []})}>Clear</button>
           </div>
         )}
       </div>
